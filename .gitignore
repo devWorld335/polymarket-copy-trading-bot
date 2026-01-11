@@ -1,0 +1,51 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+build/
+out/
+
+# TypeScript files
+*.tsbuildinfo
+
+# Environment variables
+.env
+
+# Temporary files
+*.tmp
+*.temp
+
+# Editor and OS-specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Optional lock files (keep package-lock.json for CI/CD)
+yarn.lock
+pnpm-lock.yaml
+
+# Coverage reports
+coverage/
+
+# Testing
+jest-test-results.json
+.nyc_output/
+.vitest/
+
+# Lint and formatting cache
+.eslintcache
+.prettiercache
+
+.yarn
+simulation_results
+trader_data_cache
