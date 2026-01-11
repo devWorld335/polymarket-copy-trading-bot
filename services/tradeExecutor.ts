@@ -296,7 +296,9 @@ const tradeExecutor = async (clobClient: ClobClient) => {
                 );
 
                 // Add trades to aggregation buffer
-  
+                for (const trade of trades) {
+                  
+                }
                 lastCheck = Date.now();
             }
 
