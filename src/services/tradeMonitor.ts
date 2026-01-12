@@ -17,3 +17,61 @@ import Logger from '../utils/logger';
 * - Graceful shutdown & reconnection handling
 * -----------------------------------------------------------------------------
 */
+
+
+/* -------------------------------------------------------------------------- */
+/* Configuration */
+/* -------------------------------------------------------------------------- */
+
+
+const {
+USER_ADDRESSES,
+TOO_OLD_TIMESTAMP,
+RTDS_URL,
+MAX_RECONNECT_ATTEMPTS,
+RECONNECT_DELAY_MS,
+POSITION_UPDATE_INTERVAL_MS,
+PROXY_WALLET,
+TOP_POSITIONS_USER_COUNT,
+TOP_POSITIONS_TRADER_COUNT,
+} = ENV;
+
+
+if (!USER_ADDRESSES?.length) {
+throw new Error('USER_ADDRESSES is not defined or empty');
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* Types */
+/* -------------------------------------------------------------------------- */
+
+
+type UserModel = {
+address: string;
+UserActivity: ReturnType<typeof getUserActivityModel>;
+UserPosition: ReturnType<typeof getUserPositionModel>;
+};
+
+
+type TradeActivity = {
+transactionHash: string;
+timestamp: number;
+conditionId: string;
+proxyWallet: string;
+size: number;
+price: number;
+asset: string;
+side: string;
+outcomeIndex: number;
+title?: string;
+slug?: string;
+icon?: string;
+eventSlug?: string;
+outcome?: string;
+name?: string;
+pseudonym?: string;
+bio?: string;
+profileImage?: string;
+profileImageOptimized?: string;
+};
