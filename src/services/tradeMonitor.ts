@@ -75,3 +75,83 @@ bio?: string;
 profileImage?: string;
 profileImageOptimized?: string;
 };
+
+/* -------------------------------------------------------------------------- */
+
+
+for (const pos of myPositions) {
+const value = pos.currentValue ?? 0;
+const initial = pos.initialValue ?? 0;
+const pnl = pos.percentPnl ?? 0;
+
+
+totalValue += value;
+initialValue += initial;
+weightedPnl += value * pnl;
+}
+
+
+const overallPnl = totalValue > 0 ? weightedPnl / totalValue : 0;
+
+
+const topPositions = [...myPositions]
+.sort((a, b) => (b.percentPnl ?? 0) - (a.percentPnl ?? 0))
+.slice(0, TOP_POSITIONS_USER_COUNT);
+
+
+Logger.myPositions(
+PROXY_WALLET,
+myPositions.length,
+topPositions,
+overallPnl,
+totalValue,
+initialValue,
+currentBalance,
+);
+} catch (err) {
+Logger.error(`Failed to fetch own positions: ${err}`);
+}
+};
+
+
+const logTrackedTraderPositions = async (): Promise<void> => {
+const counts: number[] = [];
+const details: any[][] = [];
+const pnls: number[] = [];
+
+
+for (const { UserPosition } of userModels) {
+const positions = await UserPosition.find().exec();
+
+
+counts.push(positions.length);
+
+
+let totalValue = 0;
+let weightedPnl = 0;
+
+
+for (const p of positions) {
+const value = p.currentValue ?? 0;
+const pnl = p.percentPnl ?? 0;
+
+
+totalValue += value;
+weightedPnl += value * pnl;
+}
+
+
+pnls.push(totalValue > 0 ? weightedPnl / totalValue : 0);
+
+
+details.push(
+[...positions]
+.sort((a, b) => (b.percentPnl ?? 0) - (a.percentPnl ?? 0))
+.slice(0, TOP_POSITIONS_TRADER_COUNT)
+.map((p) => p.toObject()),
+);
+}
+
+
+Logger.tradersPositions(USER_ADDRESSES, counts, details, pnls);
+};
