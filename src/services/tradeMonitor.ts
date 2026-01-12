@@ -155,3 +155,48 @@ details.push(
 
 Logger.tradersPositions(USER_ADDRESSES, counts, details, pnls);
 };
+
+/* -------------------------------------------------------------------------- */
+await new UserActivity({
+...activity,
+type: 'TRADE',
+usdcSize: activity.price * activity.size,
+bot: false,
+botExcutedTime: 0,
+}).save();
+
+
+Logger.info(`New trade | ${address.slice(0, 6)}…${address.slice(-4)}`);
+} catch (err) {
+Logger.error(`Trade processing failed (${address}): ${err}`);
+}
+};
+
+
+/* -------------------------------------------------------------------------- */
+/* Position Synchronizer */
+/* -------------------------------------------------------------------------- */
+
+
+const updatePositions = async (): Promise<void> => {
+for (const { address, UserPosition } of userModels) {
+try {
+const url = `https://data-api.polymarket.com/positions?user=${address}`;
+const positions = await fetchData(url);
+
+
+if (!Array.isArray(positions)) continue;
+
+
+for (const p of positions) {
+await UserPosition.findOneAndUpdate(
+{ asset: p.asset, conditionId: p.conditionId },
+p,
+{ upsert: true },
+);
+}
+} catch (err) {
+Logger.error(`Position sync failed (${address}): ${err}`);
+}
+}
+};
